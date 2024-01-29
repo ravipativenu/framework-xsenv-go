@@ -18,15 +18,21 @@ func main() {
 	})
 
 	http.HandleFunc("/btpsecrets", func(w http.ResponseWriter, r *http.Request) {
-		output := readK8SServices()
-		fmt.Fprint(w, fmt.Sprintf("%v", output))
+		mapData := readK8SServices()
+		// Convert map to json string
+		jsonByArr, err := json.Marshal(mapData)
+		if err != nil {
+			fmt.Println(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, string(jsonByArr))
 	})
 
 	http.ListenAndServe(":8080", nil)
 }
 
 // readK8SServices reads and returns the secrets from a directory
-func readK8SServices() interface{} {
+func readK8SServices() map[string]interface{} {
 	log.Println("readK8SServices")
 	// Define the default secrets path
 
@@ -34,7 +40,7 @@ func readK8SServices() interface{} {
 	secretsPath := DEFAULT_SECRETS_PATH
 
 	// Declare a variable to store the result
-	var result interface{}
+	var result map[string]interface{}
 
 	// Check if the secrets path exists
 	if _, err := os.Stat(secretsPath); !os.IsNotExist(err) {
@@ -127,7 +133,7 @@ func readServiceInstances(serviceName, servicePath string) map[string]interface{
 }
 
 // readInstance reads and returns the instance from a directory
-func readInstance(serviceName, instanceName, instancePath string) string {
+func readInstance(serviceName, instanceName, instancePath string) map[string]interface{} {
 	// Read the files from the instance path
 	credentials := readFiles(instancePath)
 
@@ -137,21 +143,22 @@ func readInstance(serviceName, instanceName, instancePath string) string {
 	instance["name"] = instanceName
 	instance["label"] = serviceName
 
-	// Convert the instance to a JSON string
-	data, err := json.Marshal(instance)
-	if err != nil {
-		// Handle the error
-		log.Fatalf("error converting instance to JSON: %v", err)
-	}
+	// // Convert the instance to a JSON string
+	// data, err := json.Marshal(instance)
+	// if err != nil {
+	// 	// Handle the error
+	// 	log.Fatalf("error converting instance to JSON: %v", err)
+	// }
 
 	// Return the JSON string
-	return string(data)
+	//return string(data)
+	return instance
 }
 
 // readFiles reads and returns the files from a directory
-func readFiles(dirPath string) map[string]interface{} {
+func readFiles(dirPath string) map[string]string {
 	// Create a map to store the result
-	result := make(map[string]interface{})
+	result := make(map[string]string)
 
 	// Read the directory entries
 	entries, err := os.ReadDir(dirPath)
@@ -193,23 +200,17 @@ func isJsonObject(str string) bool {
 }
 
 // readFileContent reads and parses the content of a file
-func readFileContent(filePath string) interface{} {
+func readFileContent(filePath string) string {
 	// Read the file content into a byte slice
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		// Handle the error
 		log.Printf("Error reading file %s: %v", filePath, err)
-		return nil
+		return ""
 	}
 
 	// Parse the JSON content into a Go value
-	var value interface{}
-	err = json.Unmarshal(content, &value)
-	if err != nil {
-		// Handle the error
-		log.Printf("Content of file %s is not valid JSON object: %v", filePath, err)
-		return nil
-	}
+	value := string(content)
 
 	// Return the parsed value
 	return value

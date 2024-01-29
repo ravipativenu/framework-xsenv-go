@@ -1,15 +1,32 @@
 # framework-xsenv-go
 
-# Run the App
+## Functions
 
-go run main.go
+### ReadK8Services
 
-## Build the docker image
+![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/master/images/ReadK8Services.JPG)
 
-docker build -t myapp:latest .
+### ReadSecrets
 
-## Run the container locally to test hte application
+![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/master/images/ReadK8Services.JPG)
 
-docker run -d -p 8080:8080 myapp:latest
+### ReadServiceInstances
+
+![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/master/images/ReadK8Services.JPG)
+
+### ReadInstance
+
+![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/master/images/ReadK8Services.JPG)
+
+### ReadFiles
+
+![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/master/images/ReadK8Services.JPG)
+
+
+### ReadFileContent
+
+![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/master/images/ReadK8Services.JPG)
+
+
 
 
