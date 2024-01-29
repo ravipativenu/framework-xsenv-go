@@ -20,7 +20,7 @@
 
 ### ReadFiles
 
-![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/main/images/ReadK8ReadFilesServices.JPG)
+![Alt Text](https://github.com/ravipativenu/framework-xsenv-go/blob/main/images/ReadFiles.JPG)
 
 
 ### ReadFileContent
