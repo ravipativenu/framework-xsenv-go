@@ -1,38 +1,17 @@
-package main
+package index
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 )
 
 const DEFAULT_SECRETS_PATH = "/etc/secrets/sapcp/"
 
-func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Hello, Kubernetes!")
-	})
-
-	http.HandleFunc("/btpsecrets", func(w http.ResponseWriter, r *http.Request) {
-		mapData := readK8SServices()
-		// Convert map to json string
-		jsonByArr, err := json.Marshal(mapData)
-		if err != nil {
-			fmt.Println(err)
-		}
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprint(w, string(jsonByArr))
-	})
-
-	http.ListenAndServe(":8080", nil)
-}
-
 // readK8SServices reads and returns the secrets from a directory
-func readK8SServices() map[string]interface{} {
+func ReadK8SServices() map[string]interface{} {
 	log.Println("readK8SServices")
 	// Define the default secrets path
 
@@ -45,7 +24,7 @@ func readK8SServices() map[string]interface{} {
 	// Check if the secrets path exists
 	if _, err := os.Stat(secretsPath); !os.IsNotExist(err) {
 		// Read the secrets from the path
-		result = readSecrets(secretsPath)
+		result = ReadSecrets(secretsPath)
 	}
 
 	// Return the result
@@ -53,7 +32,7 @@ func readK8SServices() map[string]interface{} {
 }
 
 // readSecrets reads and returns the secrets from a directory
-func readSecrets(secretsPath string) map[string]interface{} {
+func ReadSecrets(secretsPath string) map[string]interface{} {
 	// Check if the secrets path is a directory
 	info, err := os.Stat(secretsPath)
 	if err != nil || !info.IsDir() {
